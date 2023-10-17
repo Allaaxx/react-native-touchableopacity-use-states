@@ -1,20 +1,65 @@
 import React from "react";
-import { StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
-
+import { StyleSheet, 
+        Text, 
+        TextInput, 
+        View,
+        TouchableOpacity,
+        ScrollView,
+    FlatList } from "react-native";
+interface Tarefa{
+    id: string;
+    title:string;
+}
 
 export const Home = () => {
-
+    {/*Colchete para usa array*/}
     const [newTask, setNewTask] = React.useState('');
+    const [tarefas, setTarefas] = React.useState<Tarefa[]>([]);
+
+    const adcTarefa = () => {
+        const dados = {
+            id: String(new Date().getTime()),
+            title: newTask ? newTask : 'Nova tarefa',
+        };
+        setTarefas([... tarefas,dados])
+    }
+
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Tarefas do dia</Text>
             <TextInput onChangeText={setNewTask} placeholderTextColor='#555' placeholder="Tarefas" style={styles.fields} />
-            <Text style={styles.title}>Lista de tarefas</Text>
-            <Text style={styles.title}>{newTask}</Text>
+            
+            <TouchableOpacity onPress={adcTarefa} activeOpacity={0.7} style={styles.button}>
+                <Text style={styles.buttonText}>enviar</Text>
+                
+        
+        </TouchableOpacity>
+
+        {/*Scroolbar*/}
+        {/*<ScrollView>
+        {tarefas.map((tarefa : Tarefa) => (
+            <TouchableOpacity key={tarefa.id}>
+                <Text style={styles.buttonText}>{tarefa.title}</Text>
+            </TouchableOpacity>))}         
+                <Text style={styles.title}>Lista de tarefa</Text>
+        </ScrollView>*/}
+        
+        <FlatList
+            data={tarefas}
+            keyExtractor={(item: Tarefa) => item.id}
+            renderItem={({item} : {item: Tarefa}) => (
+            <TouchableOpacity>
+                <Text style={styles.buttonText} > {item.title}</Text>
+            </TouchableOpacity>
+            )}
+        />
         </View>
     );
 };
+    
+
+    
 
 const styles = StyleSheet.create({
     container: {
